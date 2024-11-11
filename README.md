@@ -1,1 +1,1 @@
-# vteam_frontend_public
+# Frontend repository for the public view.
