@@ -1,1 +1,1 @@
-# Frontend repository for the public view.
+# Frontend repository for the public client.
