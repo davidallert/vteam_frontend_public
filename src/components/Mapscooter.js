@@ -1,11 +1,21 @@
 import React, { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+
+// Correctly import icons from react-icons/fa
+import { FaRegUser,  FaRegMap  } from "react-icons/fa";
+import { LuScanQrCode } from "react-icons/lu";
+import { MdOutlineElectricScooter } from "react-icons/md";
+
+
 import mapboxgl from "mapbox-gl";
 
-mapboxgl.accessToken = "YOUR_MAPBOX_ACCESS_TOKEN"; // Replace with your Mapbox token
+
+mapboxgl.accessToken = "pk.eyJ1Ijoic2FyYWhhYmFuYWtlaCIsImEiOiJjbTR1aHBjcDEwZzYyMmpyOTVjNDAzOGI5In0.Hvlp_wf9aHAioM6_8hw9TA"; // Replace with your Mapbox token
 
 function Mapscooter() {
   const mapContainer = useRef(null);
   const map = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (map.current) return;
@@ -23,21 +33,25 @@ function Mapscooter() {
       <div ref={mapContainer} className="map" />
       {/* Bottom navigation */}
       <div className="map-buttons">
-        <button className="map-button">
-          <img src="../map.png" alt="Map Icon" />
+        <button className="map-button"
+        onClick={() => navigate("/mapscooter")}
+        >
+          <FaRegMap size={28} />
         </button>
         <button className="map-button">
-          <img src="pass-icon.png" alt="current Icon" />
+          <MdOutlineElectricScooter size={28} />
         </button>
         <button className="map-button">
-          <img src="scan-icon.png" alt="Scan Icon" />
+          <LuScanQrCode size={28} />
         </button>
-        <button className="map-button">
-          <img src="profile-icon.png" alt="Profile Icon" />
+        <button className="map-button"
+        onClick={() => navigate("/userinfo")}>
+          <FaRegUser size={28} />
         </button>
       </div>
     </div>
   );
 }
+
 
 export default Mapscooter;
