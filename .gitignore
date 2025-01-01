@@ -24,3 +24,5 @@ yarn-error.log*
 
 disktop
 disktop.pub
+
+.env
