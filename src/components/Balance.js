@@ -1,14 +1,21 @@
-import React, { useState } from "react";
+//Balance.js
+
+import React, { useState, useEffect } from "react";
 import { getUserEmail, getAuthToken, getUserBalance } from "../utils/auth";
 import { handleBalance } from '../utils/auth.js';
+
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { GrFormPreviousLink } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
 
+
+
 const Balance = () => {
-  const [amount, setAmount] = useState(""); // Use string to allow + or -
+  const [amount, setAmount] = useState("");
   const [responseMessage, setResponseMessage] = useState("");
   const [updatedBalance, setUpdatedBalance] = useState(null);
+
+
 
   const navigate = useNavigate();
   // Fetch user details
@@ -46,6 +53,7 @@ const Balance = () => {
 
       // Parse response
       const data = await response.json();
+      console.log(data);
 
       if (data.errors) {
         throw new Error(data.errors[0].message);
@@ -63,8 +71,6 @@ const Balance = () => {
   //const userBalance = updatedBalance;
   //handleBalance(userBalance);
   //console.log('User Balance:',userBalance)
-
-
 
     return (
       <>

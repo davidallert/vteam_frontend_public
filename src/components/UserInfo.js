@@ -5,6 +5,7 @@ import { getUserEmail, getUserBalance} from "../utils/auth";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { AiOutlineHistory } from "react-icons/ai";
 import { TbReceipt } from "react-icons/tb";
+import { GrFormPreviousLink } from "react-icons/gr";
 
 
 // Can I get the amount, name, surname from the login data?? I am getting 'null'.
@@ -22,6 +23,13 @@ const UserInfo = () => {
 
     const navigate = useNavigate();
     return (
+
+        <div>
+        <div>
+            <button className="pre-button" onClick={() => navigate("/mapscooter")}>
+            <GrFormPreviousLink size={28} />
+            </button>
+        </div>
         <div className="user-container">
             <h1>Hi Username!</h1>
             <div className="user-info">
@@ -48,6 +56,7 @@ const UserInfo = () => {
                     <p>User Email</p>
                 </button>
             </div>
+        </div>
         </div>
     )
 }

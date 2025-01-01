@@ -95,8 +95,7 @@ function Login() {
             required
         />
         <button type="submit" className="login-button">Login</button>
-    </form>
-    {googleOAuthUrl && (
+        {googleOAuthUrl && (
         <button
             onClick={() => window.location.href = googleOAuthUrl}
             className="google-button"
@@ -104,6 +103,8 @@ function Login() {
             Continue with Google
         </button>
     )}
+    </form>
+
     <p>Don't have an account? <Link to="/register">Sign up here</Link></p>
     <div className="terms">
         By continuing, you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.

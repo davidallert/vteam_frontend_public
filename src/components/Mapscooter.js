@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Correctly import icons from react-icons/fa
+
+
 import { FaRegUser,  FaRegMap  } from "react-icons/fa";
 import { LuScanQrCode } from "react-icons/lu";
 import { MdOutlineElectricScooter } from "react-icons/md";
@@ -10,8 +11,8 @@ import { MdOutlineElectricScooter } from "react-icons/md";
 import mapboxgl from "mapbox-gl";
 
 
-mapboxgl.accessToken = "pk.eyJ1Ijoic2FyYWhhYmFuYWtlaCIsImEiOiJjbTR1aHBjcDEwZzYyMmpyOTVjNDAzOGI5In0.Hvlp_wf9aHAioM6_8hw9TA"; // Replace with your Mapbox token
-
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+console.log(mapboxgl.accessToken);
 function Mapscooter() {
   const mapContainer = useRef(null);
   const map = useRef(null);
