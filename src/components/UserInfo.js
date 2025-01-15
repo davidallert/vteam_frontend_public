@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserEmail, getUserBalance} from "../utils/auth";
+import { getUserEmail, getUserBalance, getUserName} from "../utils/auth";
 
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { AiOutlineHistory } from "react-icons/ai";
@@ -12,14 +12,15 @@ import { GrFormPreviousLink } from "react-icons/gr";
 
 
 const UserInfo = () => {
-    const [name, setName] = useState("");
-    const [surname, setSurname] = useState("");
+    //const [name, setName] = useState("");
+    //const [surname, setSurname] = useState("");
     //const [email, setEmail] = useState("");
     //const [balance, setBalance] = useState("");
 
 
     const email = getUserEmail();
-    //const balance = getUserBalance();
+    const balance = getUserBalance();
+    const name = getUserName();
 
     const navigate = useNavigate();
     return (
@@ -31,7 +32,7 @@ const UserInfo = () => {
             </button>
         </div>
         <div className="user-container">
-            <h1>Hi Username!</h1>
+            <h1>Hi  {name} !</h1>
             <div className="user-info">
                 <button className="balance-button"
                 onClick={() => navigate("/balance")}>
@@ -49,11 +50,11 @@ const UserInfo = () => {
             <div className="user-details">
                 <button>
                     <p>Name</p>
-                    <p>User name</p>
+                    <p>{name}</p>
                 </button>
                 <button>
                     <p>Email</p>
-                    <p>User Email</p>
+                    <p>{email}</p>
                 </button>
             </div>
         </div>

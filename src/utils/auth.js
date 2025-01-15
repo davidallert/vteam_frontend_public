@@ -9,8 +9,12 @@ export const handleLogin = (userToken, userEmail) => {
     sessionStorage.setItem('userEmail', userEmail);
 };
 
-export const handleBalance = (userBalance) => {
-    sessionStorage.setItem('userBalance', userBalance);
+export const handleBalance = (userAmount) => {
+    sessionStorage.setItem('userAmount', userAmount);
+};
+
+export const handleName = (userName) => {
+    sessionStorage.setItem('userName', userName);
 };
 
 export const getUserEmail = () => {
@@ -22,7 +26,11 @@ export const getAuthToken = () => {
 }
 
 export const getUserBalance = () => {
-    return sessionStorage.getItem('userBalance') || '';
+    return sessionStorage.getItem('userAmount') || '';
 }
 
-export default handleLogin;
+export const getUserName = () => {
+    return sessionStorage.getItem('userName') || '';
+}
+
+export default {handleLogin, handleBalance, handleName};

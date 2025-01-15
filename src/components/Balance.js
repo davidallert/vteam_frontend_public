@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { getUserEmail, getAuthToken, getUserBalance } from "../utils/auth";
-import { handleBalance } from '../utils/auth.js';
 
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { GrFormPreviousLink } from "react-icons/gr";
@@ -15,13 +14,13 @@ const Balance = () => {
   const [responseMessage, setResponseMessage] = useState("");
   const [updatedBalance, setUpdatedBalance] = useState(null);
 
-
-
   const navigate = useNavigate();
   // Fetch user details
   const email = getUserEmail();
   const authToken = getAuthToken();
-  //const balance = getUserBalance();
+  const balance = getUserBalance();
+  //const userBalance = balance + Number(amount);
+
 
   console.log('Token', authToken);
 
@@ -54,6 +53,7 @@ const Balance = () => {
       // Parse response
       const data = await response.json();
       console.log(data);
+      
 
       if (data.errors) {
         throw new Error(data.errors[0].message);
@@ -68,10 +68,6 @@ const Balance = () => {
     }
   };
 
-  //const userBalance = updatedBalance;
-  //handleBalance(userBalance);
-  //console.log('User Balance:',userBalance)
-
     return (
       <>
         <div>
@@ -83,7 +79,7 @@ const Balance = () => {
         <div className="balance-container">
           <form onSubmit={handleSubmit}>
             <label htmlFor="amount">
-              <MdOutlineAccountBalanceWallet size={28} /> {updatedBalance} kr
+              <MdOutlineAccountBalanceWallet size={28} /> {balance} kr
             </label>
             <input
               type="text"

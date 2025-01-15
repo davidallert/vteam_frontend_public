@@ -1,10 +1,10 @@
+//Login.js
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GraphQLClient, gql } from 'graphql-request';
-import { handleLogin } from '../utils/auth.js';
-
+import { handleLogin, handleName, handleBalance } from '../utils/auth.js';
+import { getAuthToken } from "../utils/auth";
 import appImage from '../5.png';
-
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -12,8 +12,12 @@ function Login() {
     const [errorMessage, setErrorMessage] = useState('');
     const [googleOAuthUrl, setGoogleOAuthUrl] = useState('');
     const navigate = useNavigate();
+    const [userData, setUserData] = useState(null);
 
-    const client = new GraphQLClient('http://localhost:8585/graphql/auth', {
+    const authToken = getAuthToken();
+
+    //Manuell Login
+    const client = new GraphQLClient(process.env.REACT_APP_API_URL || 'http://localhost:8585/graphql/auth', {
         headers: {
             'Content-Type': 'application/json',
         },
@@ -25,19 +29,18 @@ function Login() {
                 message
                 user {
                     email
-                    admin 
+                    admin
                 }
                 token
             }
         }
     `;
-
+//Google Login
     const fetchGoogleOAuthUrl = async () => {
         try {
             const response = await fetch('http://localhost:8585/posts/oauth');
             const data = await response.json();
             setGoogleOAuthUrl(data.oauthUrl);
-            
         } catch (error) {
             console.error('Error fetching Google OAuth URL:', error);
         }
@@ -51,6 +54,7 @@ function Login() {
         e.preventDefault();
         try {
             const data = await client.request(LOGIN_MUTATION, { email, password });
+            console.log('Login Data:', data);
 
             if (!data.login || !data.login.token) {
                 setErrorMessage(data.login?.message || 'Invalid login credentials.');
@@ -58,16 +62,54 @@ function Login() {
             }
 
             const userToken = data.login.token;
-            const userEmail = email;
+            handleLogin(userToken, email);
 
-            console.log('User Token:', userToken);
-            console.log('User Email:', userEmail);
+            // Fetch user data when manuell login
+            const userDataResponse = await fetch("http://localhost:8585/graphql/users", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${userToken}`,
+                },
+                body: JSON.stringify({
+                    query: `
+                        query {
+                            userDataByEmail(email: "${email}") {
+                                email
+                                name
+                                surname
+                                amount
+                            }
+                        }
+                    `,
+                }),
+            });
 
+            const userDataResult = await userDataResponse.json();
+            if (userDataResult.errors) {
+                setErrorMessage("Failed to fetch user data. Please try again.");
+                console.error("Error fetching user data:", userDataResult.errors);
+                return;
+            }
 
-            handleLogin(userToken, userEmail);
+            setUserData(userDataResult.data.userDataByEmail);
+            console.log("User Data:", userDataResult.data.userDataByEmail);
 
+            const userFirstName = userData.name;
+            console.log(userFirstName);
+            const userSurName = userData.surname;
+            console.log(userSurName);
 
+            const userAmount = userData.amount;
+            console.log(userAmount);
 
+            const userName = userData.name + ' ' + userData.surname;
+            console.log(userName);
+
+            handleName(userName, userName);
+            handleBalance(userAmount, userAmount);
+
+            //const userAmount = userData.amount;
             navigate('/mapscooter');
         } catch (error) {
             setErrorMessage(error.response?.errors?.[0]?.message || 'Login failed. Please try again.');
@@ -80,37 +122,38 @@ function Login() {
             <h2>Scooti.</h2>
 
             <form onSubmit={handleSubmit}>
-        <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-        />
-        <input
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-        />
-        <button type="submit" className="login-button">Login</button>
-        {googleOAuthUrl && (
-        <button
-            onClick={() => window.location.href = googleOAuthUrl}
-            className="google-button"
-        >
-            Continue with Google
-        </button>
-    )}
-    </form>
+                <input
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                <input
+                    type="password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                <button type="submit" className="login-button">Login</button>
+                {googleOAuthUrl && (
+                    <button
+                        onClick={() => window.location.href = googleOAuthUrl}
+                        className="google-button"
+                    >
+                        Continue with Google
+                    </button>
+                )}
+            </form>
 
-    <p>Don't have an account? <Link to="/register">Sign up here</Link></p>
-    <div className="terms">
-        By continuing, you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.
-    </div>
-</div>
+            {errorMessage && <div className="error-message">{errorMessage}</div>}
 
+            <p>Don't have an account? <Link to="/register">Sign up here</Link></p>
+            <div className="terms">
+                By continuing, you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.
+            </div>
+        </div>
     );
 }
 

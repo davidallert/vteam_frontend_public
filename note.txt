@@ -1,0 +1,36 @@
+// view the current branch
+git branch
+
+// add a new branch
+git checkout -b branch-name
+
+//switch to anthore branch
+git switch branch-name
+
+//delete branch
+git branch -d branch-name
+
+//push
+git push origin branch-name
+
+
+// when somthing baad happen!!!!
+git reflog
+
+// if i want to remove somthing from the github t.ex .env
+git rm --cached .env
+
+//commit again and push
+git commit -m "Remove .env file from Git tracking"
+
+git push origin main
+
+
+//update docker
+
+docker build -t sara704/kund-app:last .
+
+docker push sara704/kund-app:last
+
+docker run -p 3000:3000 sara704/kund-app:last
+
