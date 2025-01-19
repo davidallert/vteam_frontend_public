@@ -1,32 +1,38 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {getAuthToken} from "../utils/auth";
-
-import { FaRegUser, FaRegMap } from "react-icons/fa";
-import { LuScanQrCode } from "react-icons/lu";
-import { MdOutlineElectricScooter } from "react-icons/md";
-import { TbScooter, TbCurrentLocation } from "react-icons/tb";
+import { createRoot } from "react-dom/client";
+import { getAuthToken, getUserEmail } from "../utils/auth";
 import mapboxgl from "mapbox-gl";
-import { createRoot } from 'react-dom/client';
-import 'mapbox-gl/dist/mapbox-gl.css';
 
+//icons
+import { FaRegUser, FaRegMap } from "react-icons/fa";
+import { LuQrCode } from "react-icons/lu";
+import { MdOutlineElectricScooter } from "react-icons/md";
+import { TbScooter } from "react-icons/tb";
+
+import "mapbox-gl/dist/mapbox-gl.css";
+import io from "socket.io-client";
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+const socket = io("http://localhost:8585");
 
 function Mapscooter() {
   const mapContainer = useRef(null);
   const map = useRef(null);
   const navigate = useNavigate();
   const [scooters, setScooters] = useState([]);
+  const [joinedScooterId, setJoinedScooterId] = useState(null);
 
   const token = getAuthToken();
-  //const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdiMDdjYjE5ZTllM2IzMTc2MTU2NDEiLCJ1c2VyIjoidGVzdEBleGFtcGxlLmNvbSIsImFkbWluIjpmYWxzZSwiaWF0IjoxNzM2MTE2ODE4LCJleHAiOjE3MzYyMDMyMTh9.KHZWBERuwCy7gK_Bqc4gkKhqIkm4-dR56rzZIjzh2cQ'
+  const email = getUserEmail();
 
+  // Fetch scooters from the server
   const fetchScooters = async () => {
     const query = `
       query {
         scooters {
           _id
+          customid
           status
           speed
           battery_level
@@ -37,105 +43,101 @@ function Mapscooter() {
       }
     `;
 
-    const response = await fetch("http://localhost:8585/graphql/scooters", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ query }),
-    });
+    try {
+      const response = await fetch("http://localhost:8585/graphql/scooters", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query }),
+      });
 
-    const data = await response.json();
-    console.log('Fetched data:', data);
-
-    if (data.data && data.data.scooters) {
-      setScooters(data.data.scooters);
-      console.log('Setting scooters:', data.data.scooters);
+      const data = await response.json();
+      if (data.data?.scooters) {
+        setScooters(data.data.scooters);
+      }
+    } catch (error) {
+      console.error("Error fetching scooters:", error);
     }
   };
 
-
   useEffect(() => {
     if (map.current) return;
-  
+
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/streets-v11",
       center: [18.06324, 59.334591],
       zoom: 12,
     });
-  
-    // Fetch user's location
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userCoordinates = [
-            position.coords.longitude,
-            position.coords.latitude,
-          ];
-  
 
-          const userMarker = document.createElement("div");
-          userMarker.className = "user-marker";
-  
-
-          const root = createRoot(userMarker);
-          root.render(
-            <TbCurrentLocation size={35} color="#f75a5a" />
-          );
-  
-          new mapboxgl.Marker(userMarker)
-            .setLngLat(userCoordinates)
-            .setPopup(
-              new mapboxgl.Popup({ offset: 25 }).setText("You are here")
-            )
-            .addTo(map.current);
-  
-
-          map.current.setCenter(userCoordinates);
-        },
-        (error) => {
-          console.error("Error getting location", error);
-        }
-      );
-    } else {
-      console.error("Geolocation is not supported by this browser.");
-    }
-  
     fetchScooters();
   }, []);
-
 
   useEffect(() => {
     if (scooters.length > 0 && map.current) {
       scooters.forEach((scooter) => {
         const [lng, lat] = scooter.current_location.coordinates;
-        
-        const markerElement = document.createElement('div');
-        markerElement.className = 'scooter-marker';
-        
-        const root = createRoot(markerElement);
-        root.render(
-          <TbScooter size={35} color="black" />
-        );
+  
+        // Create a marker element
+        const markerElement = document.createElement("div");
+        markerElement.className = "scooter-marker";
+  
+        // Add a container for the icon and text
+        markerElement.innerHTML = `
+          <div class="circle-icon">
+            <span class="circle-text">Scooti.</span>
+          </div>
+        `;
+  
+        const popupContent = document.createElement("div");
+        popupContent.classList.add("scooter-popup");
+  
+        popupContent.innerHTML = `
+          <h4>Scooter ID: ${scooter.customid}</h4>
+          <p>Status: ${scooter.status}</p>
+          <p>Battery: ${scooter.battery_level}%</p>
+          <button class="join-scooter-btn">Join Scooter</button>
+        `;
+  
+        popupContent.querySelector(".join-scooter-btn").addEventListener("click", () => {
+          handleJoinScooter(scooter.customid, { lon: lng, lat });
+        });
   
         new mapboxgl.Marker(markerElement)
           .setLngLat([lng, lat])
-          .setPopup(
-            new mapboxgl.Popup({ offset: 25 })
-              .setHTML(
-                `<h4>Scooter ID: ${scooter._id}</h4>
-                <p>Status: ${scooter.status}</p>
-                <p>Battery: ${scooter.battery_level}%</p>
-                <p>Speed: ${scooter.speed} km/h</p>`
-              )
-          )
+          .setPopup(new mapboxgl.Popup({ offset: 25 }).setDOMContent(popupContent))
           .addTo(map.current);
       });
+
     }
-  }, [scooters]);
+  }, [scooters, joinedScooterId]);
   
+
+  const handleJoinScooter = (scooterId, currentLocation) => {
+    if (!email) {
+      alert("User email is missing. Please ensure you are logged in.");
+      return;
+    }
+    setJoinedScooterId(scooterId);
+    socket.emit("joinScooter", { scooterId, email, current_location: currentLocation });
+    alert(`You have joined scooter ${scooterId}`);
+  };
+
+  /*useEffect(() => {
+    if (joinedScooterId) {
+      socket.on("receivemovingLocation", (location) => {
+        if (joinedScooterId === location.scooterId) {
+          console.log(`Scooter ${joinedScooterId} moved to:`, location);
+        }
+      });
+
+      return () => {
+        socket.off("receivemovingLocation");
+      };
+    }
+  }, [joinedScooterId]);*/
 
   return (
     <div className="map-container">
@@ -148,7 +150,7 @@ function Mapscooter() {
           <MdOutlineElectricScooter size={28} />
         </button>
         <button className="map-button">
-          <LuScanQrCode size={28} />
+          <LuQrCode size={28} />
         </button>
         <button className="map-button" onClick={() => navigate("/userinfo")}>
           <FaRegUser size={24} />

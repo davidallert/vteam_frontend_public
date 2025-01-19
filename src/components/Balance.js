@@ -1,6 +1,6 @@
 //Balance.js
 
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { getUserEmail, getAuthToken, getUserBalance } from "../utils/auth";
 
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
@@ -12,9 +12,10 @@ import { useNavigate } from "react-router-dom";
 const Balance = () => {
   const [amount, setAmount] = useState("");
   const [responseMessage, setResponseMessage] = useState("");
-  const [updatedBalance, setUpdatedBalance] = useState(null);
+  //const [updatedBalance, setUpdatedBalance] = useState(null);
 
   const navigate = useNavigate();
+
   // Fetch user details
   const email = getUserEmail();
   const authToken = getAuthToken();
@@ -60,7 +61,7 @@ const Balance = () => {
       }
 
       // Update state with the new balance
-      setUpdatedBalance(data.data.updateBalance.amount);
+      //setUpdatedBalance(data.data.updateBalance.amount);
       setResponseMessage("Balance updated successfully!");
     } catch (error) {
       console.error("Error updating balance:", error);

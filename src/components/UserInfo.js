@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserEmail, getUserBalance, getUserName} from "../utils/auth";
 
@@ -8,15 +8,7 @@ import { TbReceipt } from "react-icons/tb";
 import { GrFormPreviousLink } from "react-icons/gr";
 
 
-// Can I get the amount, name, surname from the login data?? I am getting 'null'.
-
-
 const UserInfo = () => {
-    //const [name, setName] = useState("");
-    //const [surname, setSurname] = useState("");
-    //const [email, setEmail] = useState("");
-    //const [balance, setBalance] = useState("");
-
 
     const email = getUserEmail();
     const balance = getUserBalance();

@@ -14,7 +14,6 @@ function Login() {
     const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
 
-    const authToken = getAuthToken();
 
     //Manuell Login
     const client = new GraphQLClient(process.env.REACT_APP_API_URL || 'http://localhost:8585/graphql/auth', {
@@ -95,21 +94,14 @@ function Login() {
             setUserData(userDataResult.data.userDataByEmail);
             console.log("User Data:", userDataResult.data.userDataByEmail);
 
-            const userFirstName = userData.name;
-            console.log(userFirstName);
-            const userSurName = userData.surname;
-            console.log(userSurName);
 
             const userAmount = userData.amount;
-            console.log(userAmount);
-
             const userName = userData.name + ' ' + userData.surname;
-            console.log(userName);
+
 
             handleName(userName, userName);
             handleBalance(userAmount, userAmount);
 
-            //const userAmount = userData.amount;
             navigate('/mapscooter');
         } catch (error) {
             setErrorMessage(error.response?.errors?.[0]?.message || 'Login failed. Please try again.');

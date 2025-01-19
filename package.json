@@ -3,29 +3,33 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
+    "@babel/preset-env": "<current-version>",
+    "@babel/preset-react": "<current-version>",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.1.14",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.9",
+    "babel-jest": "<current-version>",
     "graphql": "^16.10.0",
+    "graphql-compose": "^9.0.11",
     "graphql-request": "^7.1.2",
+    "jest": "<current-version>",
     "leaflet": "^1.9.4",
     "mapbox-gl": "^3.9.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^4.12.0",
     "react-map-gl": "^7.1.7",
     "react-router-dom": "^7.0.2",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4",
-    "@fortawesome/free-solid-svg-icons": "^6.7.2",
-    "@fortawesome/react-fontawesome": "^0.1.14",
-    "graphql-compose": "^9.0.11",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-icons": "^4.10.1"
+    "react-test-renderer": "<current-version>",
+    "socket.io-client": "^4.8.1",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -45,7 +49,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.26.3",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "babel-jest": "^29.7.0",
+    "jest": "^27.5.1",
+    "react-test-renderer": "^18.3.1"
   }
-
-  
 }

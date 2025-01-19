@@ -17,22 +17,6 @@ const Register = () => {
         },
     });
  
-/*mutation {
-  register(
-    email: "test21@example.com",
-    password: "password123",
-    name: "Test",
-    surname: "User",
-    admin: false,
-  ) {
-    message
-    user {
-      email
-    }
-  }
-}*/
-
-
     // GraphQL mutation for registering a user
     const REGISTER_MUTATION = gql`
         mutation Register($email: String!, $password: String!, $admin: Boolean!, $name: String, $surname: String) {
@@ -46,7 +30,6 @@ const Register = () => {
             }
         }
     `;
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
