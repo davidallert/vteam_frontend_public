@@ -1,25 +1,20 @@
-//Login.js
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GraphQLClient, gql } from 'graphql-request';
 import { handleLogin, handleName, handleBalance } from '../utils/auth.js';
-import { getAuthToken } from "../utils/auth";
 import appImage from '../5.png';
 
-function Login() {
+const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [googleOAuthUrl, setGoogleOAuthUrl] = useState('');
-    const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
+    const navigate = useNavigate();
 
-
-    //Manuell Login
-    const client = new GraphQLClient(process.env.REACT_APP_API_URL || 'http://localhost:8585/graphql/auth', {
-        headers: {
-            'Content-Type': 'application/json',
-        },
+    // GraphQL client and mutation for manual login
+    const client = new GraphQLClient('http://localhost:8585/graphql/auth', {
+        headers: { 'Content-Type': 'application/json' },
     });
 
     const LOGIN_MUTATION = gql`
@@ -34,28 +29,28 @@ function Login() {
             }
         }
     `;
-//Google Login
-    const fetchGoogleOAuthUrl = async () => {
-        try {
-            const response = await fetch('http://localhost:8585/posts/oauth');
-            const data = await response.json();
-            setGoogleOAuthUrl(data.oauthUrl);
-        } catch (error) {
-            console.error('Error fetching Google OAuth URL:', error);
-        }
-    };
 
+    // Fetch Google OAuth URL
     useEffect(() => {
+        const fetchGoogleOAuthUrl = async () => {
+            try {
+                const response = await fetch('http://localhost:8585/posts/oauth');
+                const data = await response.json();
+                setGoogleOAuthUrl(data.oauthUrl);
+            } catch (error) {
+                console.error('Error fetching Google OAuth URL:', error);
+            }
+        };
         fetchGoogleOAuthUrl();
     }, []);
 
+    // Handle manual login form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const data = await client.request(LOGIN_MUTATION, { email, password });
-            console.log('Login Data:', data);
 
-            if (!data.login || !data.login.token) {
+            if (!data.login?.token) {
                 setErrorMessage(data.login?.message || 'Invalid login credentials.');
                 return;
             }
@@ -63,11 +58,11 @@ function Login() {
             const userToken = data.login.token;
             handleLogin(userToken, email);
 
-            // Fetch user data when manuell login
-            const userDataResponse = await fetch("http://localhost:8585/graphql/users", {
-                method: "POST",
+            // Fetch user data
+            const userDataResponse = await fetch('http://localhost:8585/graphql/users', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                     Authorization: `Bearer ${userToken}`,
                 },
                 body: JSON.stringify({
@@ -86,25 +81,24 @@ function Login() {
 
             const userDataResult = await userDataResponse.json();
             if (userDataResult.errors) {
-                setErrorMessage("Failed to fetch user data. Please try again.");
-                console.error("Error fetching user data:", userDataResult.errors);
+                setErrorMessage('Failed to fetch user data. Please try again.');
+                console.error('Error fetching user data:', userDataResult.errors);
                 return;
             }
 
-            setUserData(userDataResult.data.userDataByEmail);
-            console.log("User Data:", userDataResult.data.userDataByEmail);
+            const user = userDataResult.data.userDataByEmail;
+            setUserData(user);
 
-
-            const userAmount = userData.amount;
-            const userName = userData.name + ' ' + userData.surname;
-
-
+            const userAmount = user.amount;
+            const userName = `${user.name} ${user.surname}`;
             handleName(userName, userName);
             handleBalance(userAmount, userAmount);
 
             navigate('/mapscooter');
         } catch (error) {
-            setErrorMessage(error.response?.errors?.[0]?.message || 'Login failed. Please try again.');
+            setErrorMessage(
+                error.response?.errors?.[0]?.message || 'Login failed. Please try again.'
+            );
         }
     };
 
@@ -131,7 +125,8 @@ function Login() {
                 <button type="submit" className="login-button">Login</button>
                 {googleOAuthUrl && (
                     <button
-                        onClick={() => window.location.href = googleOAuthUrl}
+                        type="button"
+                        onClick={() => (window.location.href = googleOAuthUrl)}
                         className="google-button"
                     >
                         Continue with Google
@@ -141,12 +136,15 @@ function Login() {
 
             {errorMessage && <div className="error-message">{errorMessage}</div>}
 
-            <p>Don't have an account? <Link to="/register">Sign up here</Link></p>
+            <p>
+                Don't have an account? <Link to="/register">Sign up here</Link>
+            </p>
             <div className="terms">
-                By continuing, you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.
+                By continuing, you agree to our{' '}
+                <Link to="/terms">Terms</Link> and <Link to="/privacy">Privacy Policy</Link>.
             </div>
         </div>
     );
-}
+};
 
 export default Login;

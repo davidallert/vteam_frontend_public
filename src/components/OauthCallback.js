@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
-import { handleLogin, handleName, handleBalance  } from '../utils/auth.js';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { handleLogin, handleName, handleBalance } from '../utils/auth.js';
 import { GraphQLClient, gql } from 'graphql-request';
-
 
 const GoogleCallback = () => {
   const navigate = useNavigate();
@@ -15,20 +13,22 @@ const GoogleCallback = () => {
     const token = params.get('token');
 
     if (user && token) {
-      // Step 1: Manually log in the user with the generated temporary password
       manualLogin(user, 'generatedTempPassword', token);
     } else {
       console.error('Error: Missing user or token parameters');
     }
-  }, [navigate]);
+  }, [location]);
 
+  /**
+   * Perform manual login with email and temporary password
+   * @param {string} email - User's email
+   * @param {string} password - Temporary password
+   * @param {string} googleToken - Google authentication token
+   */
   const manualLogin = async (email, password, googleToken) => {
     try {
-      // Make the GraphQL request for manual login
-      const client = new GraphQLClient(process.env.REACT_APP_API_URL || 'http://localhost:8585/graphql/auth', {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const client = new GraphQLClient('http://localhost:8585/graphql/auth', {
+        headers: { 'Content-Type': 'application/json' },
       });
 
       const LOGIN_MUTATION = gql`
@@ -45,11 +45,10 @@ const GoogleCallback = () => {
       `;
 
       const response = await client.request(LOGIN_MUTATION, { email, password });
-      if (response.login && response.login.token) {
-        const userToken = response.login.token;
-        handleLogin(userToken, email);
+      const userToken = response.login?.token;
 
-        // Step 2: Fetch user data after manual login
+      if (userToken) {
+        handleLogin(userToken, email);
         fetchUserData(email, userToken);
       } else {
         console.error('Login failed:', response.login?.message);
@@ -59,50 +58,46 @@ const GoogleCallback = () => {
     }
   };
 
+  /**
+   * Fetch user data using GraphQL query
+   * @param {string} email - User's email
+   * @param {string} token - User's authentication token
+   */
   const fetchUserData = async (email, token) => {
     try {
-      const userDataResponse = await fetch("http://localhost:8585/graphql/users", {
+      const query = `
+        query {
+          userDataByEmail(email: "${email}") {
+            email
+            name
+            surname
+            amount
+          }
+        }
+      `;
+
+      const response = await fetch("http://localhost:8585/graphql/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          query: `
-            query {
-              userDataByEmail(email: "${email}") {
-                email
-                name
-                surname
-                amount
-              }
-            }
-          `,
-        }),
+        body: JSON.stringify({ query }),
       });
 
-      const userDataResult = await userDataResponse.json();
-      if (userDataResult.errors) {
-        console.error("Failed to fetch user data:", userDataResult.errors);
+      const result = await response.json();
+
+      if (result.errors) {
+        console.error("Failed to fetch user data:", result.errors);
         return;
       }
 
-      const userData = userDataResult.data.userDataByEmail;
-      console.log("User Data:", userData);
-      const userFirstName = userData.name;
-      console.log(userFirstName);
-      const userSurName = userData.surname;
-      console.log(userSurName);
+      const { name, surname, amount } = result.data.userDataByEmail;
 
-      const userAmount = userData.amount;
-      console.log(userAmount);
-
-      const userName = userData.name + ' ' + userData.surname;
-      console.log(userName);
-
+      // Update user details
+      const userName = `${name} ${surname}`;
       handleName(userName, userName);
-      handleBalance(userAmount, userAmount);
-
+      handleBalance(amount, amount);
 
       // Navigate to the next page
       navigate('/mapscooter');

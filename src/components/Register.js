@@ -16,7 +16,7 @@ const Register = () => {
             'Content-Type': 'application/json',
         },
     });
- 
+
     // GraphQL mutation for registering a user
     const REGISTER_MUTATION = gql`
         mutation Register($email: String!, $password: String!, $admin: Boolean!, $name: String, $surname: String) {
