@@ -72,7 +72,7 @@ const Balance = () => {
       <div className="balance-container">
         <form onSubmit={handleSubmit}>
           <label htmlFor="amount">
-            <MdOutlineAccountBalanceWallet size={28} /> {updatedBalance} kr
+            <MdOutlineAccountBalanceWallet size={28} /> {updatedBalance.toFixed(2)} kr
           </label>
           <input
             type="number"

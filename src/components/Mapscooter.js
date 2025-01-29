@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAuthToken, getUserEmail } from "../utils/auth";
+import { getAuthToken, getUserEmail, getUserBalance, handleBalance } from "../utils/auth";
 import mapboxgl from "mapbox-gl";
 import { FaRegUser, FaRegMap, FaParking, FaChargingStation } from "react-icons/fa";
 import { MdOutlineElectricScooter, MdOutlineLiveHelp } from "react-icons/md";
@@ -30,6 +30,7 @@ function Mapscooter() {
   // Authentication details
   const token = getAuthToken();
   const email = getUserEmail();
+  const balance = getUserBalance();
 
   // Fetch inactive scooters from the server
   const fetchScooters = async () => {
@@ -240,7 +241,11 @@ function Mapscooter() {
           body: JSON.stringify({ query }),
         });
         const data = await response.json();
-        alert(`New balance: SEK ${data.data.updateBalance.amount.toFixed(2)}`);
+
+        const newBalance = balance - cost;
+        console.log(newBalance);
+        handleBalance(newBalance);
+        //alert(`New balance: SEK ${data.data.updateBalance.amount.toFixed(2)}`);
       } catch (error) {
         console.error("Error updating balance:", error);
       }
@@ -250,6 +255,7 @@ function Mapscooter() {
   }, [email, token]);
 
   const closeModal = () => setShowModal(false);
+
 
   // Render the map and buttons
   return (

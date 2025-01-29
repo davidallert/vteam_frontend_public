@@ -28,5 +28,7 @@ disktop.pub
 .env
 
 .note.txt
-.xMapscooter.js
-.xxMapscooter.js
+
+src/components/xMapscooter.js
+src/components/xxMapscooter.js
+src/components/xxxMapscooter.js
