@@ -78,9 +78,7 @@ const TripsHistory = () => {
       </p>
       <p><strong>Start Time:</strong> {new Date(trip.startTime).toLocaleString()}</p>
       <p><strong>End Time:</strong> {trip.endTime ? new Date(trip.endTime).toLocaleString() : "In progress"}</p>
-      <p><strong>Duration:</strong> {trip.duration ? `${trip.duration} seconds` : "N/A"}</p>
-      <p><strong>Average Speed:</strong> {trip.avgSpeed ? `${trip.avgSpeed} km/h` : "N/A"}</p>
-      <p><strong>Cost:</strong> {trip.cost ? `${trip.cost} SEK` : "N/A"}</p>
+      <p><strong>Cost:</strong> {trip.cost ? `${trip.cost.toFixed(2)} SEK` : "N/A"}</p>
     </li>
   ))}
 </ul>

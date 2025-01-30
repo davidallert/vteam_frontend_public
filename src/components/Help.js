@@ -100,28 +100,14 @@ const Help = () => {
           >
             Next
           </button>
+
+          
         </div>
+
       </div>
 
       {/* Info Section */}
-      <div className="info-container">
-        
-        <ul className="info-list">
-          <li className="info-item">
-            <FaHelmetSafety size={20} className="info-icon" />
-            <p>Wear a helmet when riding.</p>
-          </li>
-          <li className="info-item">
-            <MdElectricScooter size={20} className="info-icon" />
-            <TbRating18Plus size={20} className="info-icon" />
-            <p>You must be 18 or older to ride an e-scooter.</p>
-          </li>
-          <li className="info-item">
-            <MdNoDrinks size={20} className="info-icon" />
-            <p>Never ride under the influence of alcohol or drugs.</p>
-          </li>
-        </ul>
-      </div>
+
     </div>
   );
 };

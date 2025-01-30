@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GraphQLClient, gql } from 'graphql-request';
 import { handleLogin, handleName, handleBalance } from '../utils/auth.js';
-import appImage from '../5.png';
+import appImage from '../image.png';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -139,10 +139,7 @@ const Login = () => {
             <p>
                 Don't have an account? <Link to="/register">Sign up here</Link>
             </p>
-            <div className="terms">
-                By continuing, you agree to our{' '}
-                <Link to="/terms">Terms</Link> and <Link to="/privacy">Privacy Policy</Link>.
-            </div>
+
         </div>
     );
 };

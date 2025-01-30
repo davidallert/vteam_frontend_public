@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getAuthToken, getUserEmail, getUserBalance, handleBalance } from "../utils/auth";
 import mapboxgl from "mapbox-gl";
 import { FaRegUser, FaRegMap, FaParking, FaChargingStation } from "react-icons/fa";
-import { MdOutlineElectricScooter, MdOutlineLiveHelp } from "react-icons/md";
+import { MdOutlineElectricScooter, MdOutlineLiveHelp, MdOutlineHelpCenter } from "react-icons/md";
 import "mapbox-gl/dist/mapbox-gl.css";
 import io from "socket.io-client";
 import { createRoot } from "react-dom/client";
@@ -171,7 +171,7 @@ function Mapscooter() {
             <button class="join-scooter-btn">Join Scooter</button>
           `;
           popupContent.querySelector(".join-scooter-btn").addEventListener("click", () => {
-            handleJoinScooter(scooter.customid, { lon: lng, lat });
+            handleJoinScooter(scooter.customid,scooter.battery_level,scooter.at_station, { lon: lng, lat });
           });
           new mapboxgl.Marker(markerElement)
             .setLngLat([lng, lat])
@@ -183,14 +183,14 @@ function Mapscooter() {
   }, [scooters]);
 
   // Join a scooter
-  const handleJoinScooter = (scooterId, currentLocation) => {
+  const handleJoinScooter = (scooterId, battery_level, at_station, currentLocation) => {
     if (!email) return alert("Please log in to join a scooter.");
 
     const { lon, lat } = currentLocation;
     if (isNaN(lon) || isNaN(lat)) return alert("Invalid scooter location. Try again.");
 
     setJoinedScooterId(scooterId);
-    socket.emit("joinScooter", { scooterId, email, current_location: currentLocation });
+    socket.emit("joinScooter", { scooterId, email, battery_level, at_station, current_location: currentLocation });
     alert(`You have joined scooter ${scooterId}`);
 
     if (currentLocationMarker) currentLocationMarker.remove();
@@ -209,7 +209,7 @@ function Mapscooter() {
 
       if (rentedScooterMarker) {
         rentedScooterMarker.setLngLat([lon, lat]);
-        map.current.flyTo({ center: [lon, lat], zoom: 25 });
+        map.current.flyTo({ center: [lon, lat], zoom: 15 });
       } else {
         const marker = new mapboxgl.Marker({ color: "#f75a5a" }).setLngLat([lon, lat]).addTo(map.current);
         setRentedScooterMarker(marker);
@@ -281,12 +281,12 @@ function Mapscooter() {
           <FaRegMap size={30} />
           <p>Map</p>
         </button>
-        <button className="map-button" onClick={() => navigate("/scooter")}>
+        <button className="map-button" onClick={() => navigate("/trips")}>
           <MdOutlineElectricScooter size={30} />
-          <p>Scooter</p>
+          <p>Trips</p>
         </button>
         <button className="map-button" onClick={() => navigate("/help")}>
-          <MdOutlineLiveHelp size={30} />
+          <MdOutlineHelpCenter size={30} />
           <p>Help</p>
         </button>
         <button className="map-button" onClick={() => navigate("/userinfo")}>
