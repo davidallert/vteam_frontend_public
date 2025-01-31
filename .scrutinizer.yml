@@ -2,12 +2,13 @@
 build:
   nodes:
     analysis:
-      image: node:20-bullseye
+      image: default-jammy
       environment:
         variables:
-          NODE_VERSION: 20
+          NODE_VERSION: 20.12.0
       tests:
         override:
+          - nvm install $NODE_VERSION
           - nvm use $NODE_VERSION
           - npm install
           - npm test
