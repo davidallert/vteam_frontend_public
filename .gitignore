@@ -28,3 +28,6 @@ disktop.pub
 .env
 
 .note.txt
+
+scrutinizer.sh
+.scrutinizer_other.yml
