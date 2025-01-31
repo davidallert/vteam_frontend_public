@@ -6,20 +6,22 @@ build:
       environment:
         variables:
           NODE_VERSION: 20.12.0
-      tests:
-        override:
+      dependencies:
+        before:
           - nvm install $NODE_VERSION
           - nvm use $NODE_VERSION
           - npm install
+      tests:
+        override:
           - npm test
 
 filter:
-    paths:
-        # Specify directories that Scrutinizer will analyze.
-        - src/
-    excluded_paths:
-        - node_modules/
-        - public/
+  paths:
+    # Specify directories that Scrutinizer will analyze.
+    - src/
+  excluded_paths:
+    - node_modules/
+    - public/
 
 checks:
   javascript: true
