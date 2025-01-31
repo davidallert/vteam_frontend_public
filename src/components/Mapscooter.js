@@ -23,8 +23,8 @@ function Mapscooter() {
   const [rentedScooterMarker, setRentedScooterMarker] = useState(null);
   const [currentLocationMarker, setCurrentLocationMarker] = useState(null);
 
-  const [showModal, setShowModal] = useState(false); // Modal visibility state
-  const [tripCost, setTripCost] = useState(null); // Trip cost state
+  const [showModal, setShowModal] = useState(false);
+  const [tripCost, setTripCost] = useState(null);
 
 
   // Authentication details
@@ -36,7 +36,7 @@ function Mapscooter() {
   const fetchScooters = async () => {
     const query = `
       query {
-        inactiveScooters {
+        scooters {
           _id
           customid
           status
@@ -57,7 +57,7 @@ function Mapscooter() {
         body: JSON.stringify({ query }),
       });
       const data = await response.json();
-      if (data.data?.inactiveScooters) setScooters(data.data.inactiveScooters);
+      if (data.data?.scooters) setScooters(data.data.scooters);
     } catch (error) {
       console.error("Error fetching inactive scooters:", error);
     }
@@ -167,11 +167,11 @@ function Mapscooter() {
           const popupContent = document.createElement("div");
           popupContent.innerHTML = `
             <h4>Scooter ID: ${scooter.customid}</h4>
-            <p>Battery: ${scooter.battery_level}%</p>
+            <h4>Status: ${scooter.status}</h4>
             <button class="join-scooter-btn">Join Scooter</button>
           `;
           popupContent.querySelector(".join-scooter-btn").addEventListener("click", () => {
-            handleJoinScooter(scooter.customid,scooter.battery_level,scooter.at_station, { lon: lng, lat });
+            handleJoinScooter(scooter.customid,scooter.battery_level,scooter.status, { lon: lng, lat });
           });
           new mapboxgl.Marker(markerElement)
             .setLngLat([lng, lat])
@@ -183,14 +183,14 @@ function Mapscooter() {
   }, [scooters]);
 
   // Join a scooter
-  const handleJoinScooter = (scooterId, battery_level, at_station, currentLocation) => {
+  const handleJoinScooter = (scooterId, battery_level, status, currentLocation) => {
     if (!email) return alert("Please log in to join a scooter.");
 
     const { lon, lat } = currentLocation;
     if (isNaN(lon) || isNaN(lat)) return alert("Invalid scooter location. Try again.");
 
     setJoinedScooterId(scooterId);
-    socket.emit("joinScooter", { scooterId, email, battery_level, at_station, current_location: currentLocation });
+    socket.emit("joinScooter", { scooterId, email, battery_level, status, current_location: currentLocation });
     alert(`You have joined scooter ${scooterId}`);
 
     if (currentLocationMarker) currentLocationMarker.remove();

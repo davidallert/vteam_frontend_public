@@ -26,6 +26,7 @@ const UserInfo = () => {
         </button>
       </div>
 
+
       <div className="user-container">
         <h1>Hi {name}!</h1>
 
