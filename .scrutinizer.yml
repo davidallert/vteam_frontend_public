@@ -38,6 +38,7 @@ build:
                     - command: npm run test
                       coverage:
                         file: coverage/lcov.info
+                        format: php-clover
                     - command: eslint .
                       # ignore_errors: true
 
