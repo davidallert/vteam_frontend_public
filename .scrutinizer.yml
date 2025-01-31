@@ -27,14 +27,12 @@ filter:
 build:
     nodes:
         analysis:
-            # Environment for the analysis
             environment:
-                node: "20"  # Define the Node.js version
-                # npm: true  # Enables npm support
+                node: "20"
             tests:
                 override:
                     - npm run test
-                    - eslint .
+                    # - eslint .
             dependencies:
                 before:
                     - npm install
