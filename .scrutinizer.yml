@@ -5,10 +5,10 @@ tools:
     # Set to true if using external tools for code coverage.
     external_code_coverage: false
     javascript_analyzer:
-    enabled: true
-    config:
-        security_review: true
-        duplicated_code: true
+        enabled: true
+        config:
+            security_review: true
+            duplicated_code: true
 
 filter:
     paths:
