@@ -36,7 +36,7 @@ build:
                     - npm run test
                     - eslint .
             dependencies:
-                pre:
+                before:
                     - npm install
 
 tests:
