@@ -27,11 +27,11 @@ filter:
 build:
     nodes:
         analysis:
-            environment:
-                node: 'v20.12.0'
-                # npm: true
+            # environment:
+            #     node: 'v20.12.0'
             dependencies:
                 before:
+                    - nvm install v20.12.0
                     - npm install
             tests:
                 override:
@@ -40,7 +40,6 @@ build:
                         file: coverage/lcov.info
                         format: php-clover
                     - command: eslint .
-                      # ignore_errors: true
 
 # coding_style:
 #     javascript:
