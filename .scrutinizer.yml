@@ -1,7 +1,7 @@
 ---
 tools:
-    javascript:
-        eslint: true
+    eslint:
+        enabled: true
     # Set to true if using external tools for code coverage.
     external_code_coverage: false
 
@@ -14,7 +14,7 @@ filter:
         - public/
 
 checks:
-    javascript:
+    javascript_analyzer:
         security_review: true  # Checks for potential security vulnerabilities.
         duplicated_code: true  # Warns about duplicate code.
 
@@ -28,7 +28,6 @@ build:
             tests:
                 override:
                     - npm run test
-                    # - npm run test:jest
                     - eslint .
             dependencies:
                 pre:
