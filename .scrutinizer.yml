@@ -28,18 +28,18 @@ build:
     nodes:
         analysis:
             environment:
-                node: "20"
-            tests:
-                override:
-                    - npm run test
-                    # - eslint .
+                node: '20'
+                # npm: true
             dependencies:
                 before:
                     - npm install
-
-tests:
-    coverage:
-        file: coverage/lcov.info  # Location of the coverage file.
+            tests:
+                override:
+                    - command: npm run test
+                      coverage:
+                        file: coverage/lcov.info
+                    - command: eslint .
+                      ignore_errors: true
 
 # coding_style:
 #     javascript:
