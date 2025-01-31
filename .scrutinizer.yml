@@ -28,7 +28,7 @@ build:
     nodes:
         analysis:
             environment:
-                node: '20'
+                node: 'latest'
                 # npm: true
             dependencies:
                 before:
