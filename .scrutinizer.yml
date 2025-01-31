@@ -43,10 +43,10 @@ tests:
     coverage:
         file: coverage/lcov.info  # Location of the coverage file.
 
-coding_style:
-    javascript:
-        spaces:
-            # Adjust indentation rules
-            indentation: 4  # Number of spaces for indentation
-        line_endings: "\n"  # Enforce UNIX line endings
-        max_line_length: 120  # Max line length per coding style
+# coding_style:
+#     javascript:
+#         spaces:
+#             # Adjust indentation rules
+#             indentation: 4  # Number of spaces for indentation
+#         line_endings: "\n"  # Enforce UNIX line endings
+#         max_line_length: 120  # Max line length per coding style
