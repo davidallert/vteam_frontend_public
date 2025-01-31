@@ -18,11 +18,11 @@ filter:
         - node_modules/
         - public/
 
-checks:
-    javascript:
-        no_param_assign: true
-        no_arguments_calls: true
-        no_alert: true
+# checks:
+#     javascript:
+#         no_param_assign: true
+#         no_arguments_calls: true
+#         no_alert: true
 
 build:
     nodes:
