@@ -1,14 +1,12 @@
 ---
-tools:
-    eslint:
-        enabled: true
-    # Set to true if using external tools for code coverage.
-    external_code_coverage: false
-    # javascript_analyzer:
-    #     enabled: true
-    #     config:
-    #         security_review: true
-    #         duplicated_code: true
+build:
+  nodes:
+    analysis:
+      image: node:20
+      tests:
+        override:
+          - npm install
+          - npm test
 
 filter:
     paths:
@@ -18,33 +16,5 @@ filter:
         - node_modules/
         - public/
 
-# checks:
-#     javascript:
-#         no_param_assign: true
-#         no_arguments_calls: true
-#         no_alert: true
-
-build:
-    nodes:
-        analysis:
-            # environment:
-            #     node: 'v20.12.0'
-            dependencies:
-                before:
-                    - nvm install v20.12.0
-                    - npm install
-            tests:
-                override:
-                    - command: npm run test
-                      coverage:
-                        file: coverage/lcov.info
-                        format: php-clover
-                    - command: eslint .
-
-# coding_style:
-#     javascript:
-#         spaces:
-#             # Adjust indentation rules
-#             indentation: 4  # Number of spaces for indentation
-#         line_endings: "\n"  # Enforce UNIX line endings
-#         max_line_length: 120  # Max line length per coding style
+checks:
+  javascript: true
