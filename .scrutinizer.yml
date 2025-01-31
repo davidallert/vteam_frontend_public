@@ -8,6 +8,8 @@ build:
           NODE_VERSION: 20.12.0
       dependencies:
         before:
+          - rm -rf node_modules
+          - rm package-lock.json
           - nvm install $NODE_VERSION
           - nvm use $NODE_VERSION
           - npm install
