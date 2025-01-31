@@ -39,7 +39,7 @@ build:
                       coverage:
                         file: coverage/lcov.info
                     - command: eslint .
-                      ignore_errors: true
+                      # ignore_errors: true
 
 # coding_style:
 #     javascript:
