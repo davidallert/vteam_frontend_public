@@ -2,9 +2,13 @@
 build:
   nodes:
     analysis:
-      image: node:20
+      image: node:20-bullseye
+      environment:
+        variables:
+          NODE_VERSION: 20
       tests:
         override:
+          - nvm use $NODE_VERSION
           - npm install
           - npm test
 
