@@ -4,6 +4,11 @@ tools:
         enabled: true
     # Set to true if using external tools for code coverage.
     external_code_coverage: false
+    javascript_analyzer:
+    enabled: true
+    config:
+        security_review: true
+        duplicated_code: true
 
 filter:
     paths:
@@ -14,9 +19,10 @@ filter:
         - public/
 
 checks:
-    javascript_analyzer:
-        security_review: true  # Checks for potential security vulnerabilities.
-        duplicated_code: true  # Warns about duplicate code.
+    javascript:
+        no_param_assign: true
+        no_arguments_calls: true
+        no_alert: true
 
 build:
     nodes:
