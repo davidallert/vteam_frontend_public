@@ -10,7 +10,7 @@ build:
         before:
           - nvm install $NODE_VERSION
           - nvm use $NODE_VERSION
-          - npm install
+          - npm install --legacy-peer-deps
       tests:
         override:
           - npm test
