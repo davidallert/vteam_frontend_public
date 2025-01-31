@@ -28,7 +28,7 @@ build:
     nodes:
         analysis:
             environment:
-                node: '20.12.0'
+                node: 'iron'
                 # npm: true
             dependencies:
                 before:
