@@ -30,7 +30,7 @@ build:
             # Environment for the analysis
             environment:
                 node: "20"  # Define the Node.js version
-                npm: true  # Enables npm support
+                # npm: true  # Enables npm support
             tests:
                 override:
                     - npm run test
