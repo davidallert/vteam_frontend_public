@@ -45,7 +45,7 @@ const Help = () => {
     <div className="component-container">
       {/* Back Button */}
       <div className="back-button-container">
-        <button className="pre-button" onClick={() => navigate("/mapscooter")}>
+        <button className="pre-button" onClick={() => navigate("/mapscooter")} aria-label="Back">
           <GrFormPreviousLink size={28} />
         </button>
       </div>

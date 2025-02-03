@@ -17,7 +17,7 @@ const Login = () => {
         headers: { 'Content-Type': 'application/json' },
     });
 
-    const LOGIN_MUTATION = gql`
+    const LOGIN_MUTATION = `
         mutation Login($email: String!, $password: String!) {
             login(email: $email, password: $password) {
                 message
