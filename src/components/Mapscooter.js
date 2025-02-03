@@ -37,7 +37,7 @@ function Mapscooter() {
   const fetchScooters = async () => {
     const query = `
       query {
-        scooters {
+        scooters (limit:0){
           _id
           customid
           status

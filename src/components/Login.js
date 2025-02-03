@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GraphQLClient, gql } from 'graphql-request';
 import { handleLogin, handleName, handleBalance } from '../utils/auth.js';
-import appImage from '../image.png';
+import appImage from '../image copy 2.png';
 
 const Login = () => {
     const [email, setEmail] = useState('');

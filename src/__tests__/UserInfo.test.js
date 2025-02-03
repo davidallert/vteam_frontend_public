@@ -22,7 +22,7 @@ describe("UserInfo Component", () => {
       </MemoryRouter>
     );
 
-    // Check for all buttons
+
     expect(screen.getByRole("button", { name: /Previous/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Balance/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /History/i })).toBeInTheDocument();
@@ -39,15 +39,14 @@ describe("UserInfo Component", () => {
       </MemoryRouter>
     );
 
-    // Simulate clicking the "Balance" button
     fireEvent.click(screen.getByRole("button", { name: /balance/i }));
     expect(mockNavigate).toHaveBeenCalledWith("/balance");
 
-    // Simulate clicking the "History" button
+
     fireEvent.click(screen.getByRole("button", { name: /history/i }));
     expect(mockNavigate).toHaveBeenCalledWith("/trips");
 
-    // Simulate clicking the "Receipts" button
+
     fireEvent.click(screen.getByRole("button", { name: /receipts/i }));
     expect(mockNavigate).toHaveBeenCalledWith("/receipts");
   });

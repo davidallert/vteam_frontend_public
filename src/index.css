@@ -1,8 +1,10 @@
 body {
-  margin: 0;
+  margin: auto;
   font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background-color: #FBF4EC;
   margin-bottom: 20%;
+  max-width: 400px;
+
 }
 
 .login-comp,
@@ -24,7 +26,7 @@ body {
 }
 
 .scooter-img {
-  max-width: 80%;
+  max-width: 100%;
 
   margin-bottom: 20px;
 }
@@ -123,6 +125,7 @@ p a:hover {
   position:fixed;
   height: 100vh;
   width: 100vw;
+  max-width: 400px;
 }
 
 /* Map Styling */

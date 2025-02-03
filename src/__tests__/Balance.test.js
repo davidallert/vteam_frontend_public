@@ -13,7 +13,7 @@ jest.mock("../utils/auth", () => ({
   handleBalance: jest.fn(),
 }));
 
-// Mock the fetch function
+
 global.fetch = jest.fn(() =>
   Promise.resolve({
     json: () =>
@@ -62,7 +62,7 @@ describe("Balance Component", () => {
   });
 
   test("handles API error gracefully", async () => {
-    // Mock a failed API response
+
     global.fetch.mockImplementationOnce(() =>
       Promise.resolve({
         json: () => Promise.resolve({ errors: [{ message: "Failed to update balance" }] }),
