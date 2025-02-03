@@ -28,7 +28,7 @@ const UserInfo = () => {
 
 
       <div className="user-container">
-        <h1>Hi {name}!</h1>
+        <h1>Hi {name}! 👋 </h1>
 
         <div className="user-info">
           <button

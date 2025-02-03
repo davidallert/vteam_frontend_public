@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getAuthToken, getUserEmail, getUserBalance, handleBalance } from "../utils/auth";
 import mapboxgl from "mapbox-gl";
 import { FaRegUser, FaRegMap, FaParking, FaChargingStation } from "react-icons/fa";
-import { MdOutlineElectricScooter, MdOutlineLiveHelp, MdOutlineHelpCenter } from "react-icons/md";
+import { MdOutlineElectricScooter, MdOutlineHelpCenter } from "react-icons/md";
 import "mapbox-gl/dist/mapbox-gl.css";
 import io from "socket.io-client";
 import { createRoot } from "react-dom/client";
@@ -26,13 +26,14 @@ function Mapscooter() {
   const [showModal, setShowModal] = useState(false);
   const [tripCost, setTripCost] = useState(null);
 
-
-  // Authentication details
   const token = getAuthToken();
   const email = getUserEmail();
   const balance = getUserBalance();
 
-  // Fetch inactive scooters from the server
+  // A ref to store all scooter markers
+  const markersRef = useRef({});
+
+  // Fetch scooters
   const fetchScooters = async () => {
     const query = `
       query {
@@ -47,6 +48,7 @@ function Mapscooter() {
         }
       }
     `;
+
     try {
       const response = await fetch("http://localhost:8585/graphql/scooters", {
         method: "POST",
@@ -56,10 +58,17 @@ function Mapscooter() {
         },
         body: JSON.stringify({ query }),
       });
+
       const data = await response.json();
-      if (data.data?.scooters) setScooters(data.data.scooters);
+
+      if (data.data?.scooters) {
+        const filteredScooters = data.data.scooters.filter(
+          (scooter) => scooter.status === "inactive" || scooter.status === "charging"
+        );
+        setScooters(filteredScooters);
+      }
     } catch (error) {
-      console.error("Error fetching inactive scooters:", error);
+      console.error("Error fetching scooters:", error);
     }
   };
 
@@ -171,12 +180,15 @@ function Mapscooter() {
             <button class="join-scooter-btn">Join Scooter</button>
           `;
           popupContent.querySelector(".join-scooter-btn").addEventListener("click", () => {
-            handleJoinScooter(scooter.customid,scooter.battery_level,scooter.status, { lon: lng, lat });
+            handleJoinScooter(scooter.customid, scooter.battery_level, scooter.status, { lon: lng, lat });
           });
-          new mapboxgl.Marker(markerElement)
+
+          const marker = new mapboxgl.Marker(markerElement)
             .setLngLat([lng, lat])
             .setPopup(new mapboxgl.Popup({ offset: 25 }).setDOMContent(popupContent))
             .addTo(map.current);
+
+          markersRef.current[scooter.customid] = marker;
         }
       });
     }
@@ -193,31 +205,29 @@ function Mapscooter() {
     socket.emit("joinScooter", { scooterId, email, battery_level, status, current_location: currentLocation });
     alert(`You have joined scooter ${scooterId}`);
 
-    if (currentLocationMarker) currentLocationMarker.remove();
-    if (rentedScooterMarker) rentedScooterMarker.remove();
+    document.querySelectorAll(".mapboxgl-popup").forEach(popup => popup.remove());
 
-    const marker = new mapboxgl.Marker({ color: "#f75a5a" }).setLngLat([lon, lat]).addTo(map.current);
-    setRentedScooterMarker(marker);
+    if (currentLocationMarker) currentLocationMarker.remove();
     map.current.flyTo({ center: [lon, lat], zoom: 15 });
   };
 
   // Real-time scooter position updates
   useEffect(() => {
     socket.on("receivemovingLocation", (location) => {
-      const { lon, lat } = location.current_location;
-      if (isNaN(lon) || isNaN(lat)) return;
+      const { scooterId, current_location } = location;
+      const { lon, lat } = current_location;
 
-      if (rentedScooterMarker) {
-        rentedScooterMarker.setLngLat([lon, lat]);
+      if (isNaN(lon) || isNaN(lat)) return;
+      const scooterMarker = markersRef.current[scooterId];
+
+      if (scooterMarker) {
+        scooterMarker.setLngLat([lon, lat]);
         map.current.flyTo({ center: [lon, lat], zoom: 15 });
-      } else {
-        const marker = new mapboxgl.Marker({ color: "#f75a5a" }).setLngLat([lon, lat]).addTo(map.current);
-        setRentedScooterMarker(marker);
       }
     });
 
     return () => socket.off("receivemovingLocation");
-  }, [rentedScooterMarker]);
+  }, []);
 
   // Handle trip end
   useEffect(() => {
@@ -226,6 +236,7 @@ function Mapscooter() {
       setTripCost(cost);
       setShowModal(true);
 
+      // Fetch and update balance
       const query = `
         mutation {
           updateBalance(email: "${email}", amount: -${cost}) {
@@ -241,11 +252,8 @@ function Mapscooter() {
           body: JSON.stringify({ query }),
         });
         const data = await response.json();
-
         const newBalance = balance - cost;
-        console.log(newBalance);
         handleBalance(newBalance);
-        //alert(`New balance: SEK ${data.data.updateBalance.amount.toFixed(2)}`);
       } catch (error) {
         console.error("Error updating balance:", error);
       }
@@ -256,8 +264,6 @@ function Mapscooter() {
 
   const closeModal = () => setShowModal(false);
 
-
-  // Render the map and buttons
   return (
     <div className="map-container">
       <div ref={mapContainer} className="map" />

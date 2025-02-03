@@ -1,16 +1,8 @@
 import React, { useState } from "react";
-import SwipeableViews from "react-swipeable-views";
-import { MdElectricScooter } from "react-icons/md";
-import { FaHelmetSafety } from "react-icons/fa6";
-import { TbRating18Plus } from "react-icons/tb";
-import { MdNoDrinks } from "react-icons/md";
-
 import { GrFormPreviousLink } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
 
 const Help = () => {
-
-
   const navigate = useNavigate();
   const steps = [
     {
@@ -33,7 +25,6 @@ const Help = () => {
       description:
         "To rent a scooter, ensure your account balance has sufficient funds. Once your trip ends, the cost will be automatically deducted from your balance.",
     },
-    
   ];
 
   const [activeStep, setActiveStep] = useState(0);
@@ -61,18 +52,11 @@ const Help = () => {
 
       {/* Steps Container */}
       <div className="steps-container">
-        <SwipeableViews
-          index={activeStep}
-          onChangeIndex={(index) => setActiveStep(index)}
-          enableMouseEvents
-        >
-          {steps.map((step, index) => (
-            <div key={index} className="step">
-              <h2 className="step-title">{step.title}</h2>
-              <p className="step-description">{step.description}</p>
-            </div>
-          ))}
-        </SwipeableViews>
+        {/* Render the current step */}
+        <div className="step">
+          <h2 className="step-title">{steps[activeStep].title}</h2>
+          <p className="step-description">{steps[activeStep].description}</p>
+        </div>
 
         {/* Pagination */}
         <div className="pagination">
@@ -100,14 +84,10 @@ const Help = () => {
           >
             Next
           </button>
-
-          
         </div>
-
       </div>
 
       {/* Info Section */}
-
     </div>
   );
 };

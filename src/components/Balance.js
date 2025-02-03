@@ -64,7 +64,7 @@ const Balance = () => {
   return (
     <>
       <div>
-        <button className="pre-button" onClick={() => navigate("/userinfo")}>
+        <button className="pre-button" onClick={() => navigate("/userinfo")} aria-label="Back">
           <GrFormPreviousLink size={28} />
         </button>
       </div>
