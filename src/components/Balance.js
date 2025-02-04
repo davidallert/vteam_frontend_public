@@ -82,12 +82,12 @@ const Balance = () => {
             placeholder="Enter amount (e.g., 100)"
             required
           />
-          <button type="submit" className="balance-button">
+          <button type="submit" id= "updateButton" className="balance-button">
             Update Balance
           </button>
         </form>
 
-        {responseMessage && <p>{responseMessage}</p>}
+        {responseMessage && <p id="balance-updated">{responseMessage}</p>}
       </div>
     </>
   );

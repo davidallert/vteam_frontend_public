@@ -137,7 +137,7 @@ function Mapscooter() {
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/streets-v11",
       center: [18.06324, 59.334591],
-      zoom: 12,
+      zoom: 3,
       attributionControl: false,
     });
 
@@ -174,6 +174,7 @@ function Mapscooter() {
             </div>
           `;
           const popupContent = document.createElement("div");
+          popupContent.id="scooter"
           popupContent.innerHTML = `
             <h4>Scooter ID: ${scooter.customid}</h4>
             <h4>Status: ${scooter.status}</h4>
@@ -202,7 +203,7 @@ function Mapscooter() {
     if (isNaN(lon) || isNaN(lat)) return alert("Invalid scooter location. Try again.");
 
     setJoinedScooterId(scooterId);
-    socket.emit("joinScooter", { scooterId, email, battery_level, status, current_location: currentLocation });
+    socket.emit("joinScooter", { type:"user", scooterId, email, battery_level, status, current_location: currentLocation });
     alert(`You have joined scooter ${scooterId}`);
 
     document.querySelectorAll(".mapboxgl-popup").forEach(popup => popup.remove());

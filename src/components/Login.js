@@ -108,21 +108,21 @@ const Login = () => {
             <h2>Scooti.</h2>
 
             <form onSubmit={handleSubmit}>
-                <input
+                <input id="email"
                     type="email"
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                 />
-                <input
+                <input id="password"
                     type="password"
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <button type="submit" className="login-button">Login</button>
+                <button type="submit" id= "loginButton" className="login-button">Login</button>
                 {googleOAuthUrl && (
                     <button
                         type="button"

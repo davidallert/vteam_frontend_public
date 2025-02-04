@@ -81,9 +81,9 @@ const Register = () => {
                         placeholder="Enter your surname"
                         required
                     />
-                <button type="submit" className="login-button">Register</button>
+                <button type="submit" id="registerButton" className="login-button">Register</button>
             </form>
-            {responseMessage && <p>{responseMessage}</p>}
+            {responseMessage && <p className="success-message">{responseMessage}</p>}
         </div>
     );
 };
