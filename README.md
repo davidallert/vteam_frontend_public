@@ -1,12 +1,7 @@
 # Scrutinizer
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/davidallert/vteam_frontend_public/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/davidallert/vteam_frontend_public/?branch=main)
-<br><br>
-[![Code Coverage](https://scrutinizer-ci.com/g/davidallert/vteam_frontend_public/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/davidallert/vteam_frontend_public/?branch=main)
-<br><br>
 [![Build Status](https://scrutinizer-ci.com/g/davidallert/vteam_frontend_public/badges/build.png?b=main)](https://scrutinizer-ci.com/g/davidallert/vteam_frontend_public/build-status/main)
-<br><br>
-[![Code Intelligence Status](https://scrutinizer-ci.com/g/davidallert/vteam_frontend_public/badges/code-intelligence.svg?b=main)](https://scrutinizer-ci.com/code-intelligence)
 
 # Getting Started with Create React App
 
