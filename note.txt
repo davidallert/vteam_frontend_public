@@ -33,4 +33,7 @@ docker build -t sara704/kund-app:last .
 docker push sara704/kund-app:last
 
 docker run -p 3000:3000 sara704/kund-app:last
+docker run -p 3000:3000 sara704/scooter-app:01
 
+docker build -t sara704/scooter-app:01 .
+docker push sara704/scooter-app:01

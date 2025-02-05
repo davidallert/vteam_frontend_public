@@ -170,7 +170,7 @@ function Mapscooter() {
           const markerElement = document.createElement("div");
           markerElement.innerHTML = `
             <div class="circle-icon">
-              <span class="circle-text">Scooti.</span>
+              <span class="circle-text">🛴</span>
             </div>
           `;
           const popupContent = document.createElement("div");
