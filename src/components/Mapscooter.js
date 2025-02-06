@@ -136,8 +136,8 @@ function Mapscooter() {
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/streets-v11",
-      center: [18.06324, 59.334591],
-      zoom: 3,
+      center: [19.06324, 59.334591],
+      zoom: 18,
       attributionControl: false,
     });
 
@@ -169,7 +169,7 @@ function Mapscooter() {
           const [lng, lat] = coordinates;
           const markerElement = document.createElement("div");
           markerElement.innerHTML = `
-            <div class="circle-icon">
+            <div class="circle-icon" data-id="${scooter.customid}">
               <span class="circle-text">🛴</span>
             </div>
           `;
